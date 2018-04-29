@@ -196,8 +196,9 @@ class HModel(object):
             init.FromScratchBregmanMixture.init_global_params(
                 self, Data, **initArgs)
         elif initname.count('bregman') > 0:
-            init.FromScratchBregman.init_global_params(
+            info = init.FromScratchBregman.init_global_params(
                 self, Data, **initArgs)
+            return info
         else:
             # Set hmodel global parameters "from scratch", in two stages
             # First, init obsmodel in likelihood-specific, data-driven fashion

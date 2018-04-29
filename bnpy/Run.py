@@ -178,7 +178,7 @@ def _run_task_internal(jobname, taskid, nTask,
         Log.info(Data.get_stats_summary())
 
     # Create and initialize model parameters
-    hmodel = make_initialized_model(
+    hmodel, info = make_initialized_model(
         InitData,
         seed=algseed,
         taskid=taskid,
@@ -224,8 +224,8 @@ def _run_task_internal(jobname, taskid, nTask,
     RunInfo['UnkArgs'] = UnkArgs
     RunInfo['KwArgs'] = KwArgs
     RunInfo['ReqArgs'] = ReqArgs
+    RunInfo['Centroids'] = info['Mu']
     return hmodel, RunInfo
-
 
 def loadDataIteratorFromDisk(datapath, ReqArgs, KwArgs, dataorderseed):
     ''' Create a DataIterator from files stored on disk
@@ -391,10 +391,10 @@ def make_initialized_model(
         Log.info("  K = %d (number of clusters)" % initArgsDict['K'])
         Log.info("  seed = %d" % seed)
         start_time_sec = time.time()
-    hmodel.init_global_params(Data, seed=seed, taskid=taskid, **initArgsDict)
+    info = hmodel.init_global_params(Data, seed=seed, taskid=taskid, **initArgsDict)
     if verbose:
         Log.info("  elapsed_time: %.1f sec" % (time.time() - start_time_sec))
-    return hmodel
+    return hmodel, info
 
 
 def createLearnAlg(
